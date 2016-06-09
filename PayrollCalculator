@@ -1,0 +1,93 @@
+package com.example.nic.payrollcalculator;
+
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+    // GUI Widgets
+    private Button btn;
+    private EditText Hours;
+    private EditText PayRate;
+    private EditText RegularPay;
+    private EditText OvertimePay;
+    private EditText TotalPay;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        // create program objects that refer to GUI widgets
+        Hours = (EditText)findViewById(R.id.Hours);
+        PayRate = (EditText)findViewById(R.id.Payrate);
+        RegularPay = (EditText)findViewById(R.id.RegularPay);
+        OvertimePay = (EditText)findViewById(R.id.OvertimePay);
+        TotalPay = (EditText)findViewById(R.id.TotalPay);
+        btn = (Button)findViewById(R.id.button);
+
+        // register the listener for the button
+        btn.setOnClickListener(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void onClick(View v) {
+        // calculates regular, overtime, and total pay and displays results
+        // to user
+        if (btn == v) {
+            double hours = 0.0;
+            double payrate = 0.0;
+            double regularPay = 0.0;
+            double overtimePay = 0.0;
+            double totalPay = 0.0;
+            hours = Double.parseDouble(Hours.getText().toString());
+            payrate = Double.parseDouble(PayRate.getText().toString());
+
+            regularPay = hours * payrate;
+
+            if (hours > 40)
+            {
+                overtimePay = (hours - 40) * payrate * 1.5;
+                totalPay = regularPay + overtimePay;
+
+                RegularPay.setText(String.valueOf(regularPay));
+
+                String msg1 = String.valueOf(overtimePay);
+                String msg2 = String.valueOf(totalPay);
+                OvertimePay.setText(msg1);
+                TotalPay.setText(msg2);
+            }
+            else {
+                RegularPay.setText(String.valueOf(regularPay));
+                OvertimePay.setText(String.valueOf(0.0));
+                TotalPay.setText(String.valueOf(regularPay));
+            }
+        }
+    }
+}
